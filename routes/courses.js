@@ -37,13 +37,49 @@ router.route('/:cid')
         });
     })
     .put(function(req, res) {
-        
+        mongoose.model('Course').findOne({
+        _id: req.params.id
+        }, (err, course) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                _.assign(course, req.body);
+                course.save(function(err) {
+                if (err) {
+                    Responses.standardError(res, err);
+                } else {
+                    Responses.standardResponse(res, course);
+                }
+                });
+            }
+        });
     })
     .post(function(req, res) {
-        
+        mongoose.model('Course').create(req.body, (err, course) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                Responses.standardResponse(res, course);
+            }
+        });
     })
     .delete(function(req, res) {
-
+        mongoose.model('Course').findOne({
+        _id: req.params.id
+        }, (err, course) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                _.assign(course, req.body);
+                course.remove(function(err) {
+                if (err) {
+                    Responses.standardError(res, err);
+                } else {
+                    Responses.standardResponse(res, course);
+                }
+                });
+            }
+        });
     })
     
 module.exports = router;

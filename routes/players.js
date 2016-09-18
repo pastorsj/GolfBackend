@@ -2,7 +2,8 @@ var express = require('express'),
     router = express.Router(),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
-    methodOverride = require('method-override');
+    methodOverride = require('method-override'),
+    _ = require('lodash');
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(methodOverride(function(req, res) {
@@ -37,13 +38,49 @@ router.route('/:pid')
         });
     })
     .put(function(req, res) {
-        
+        mongoose.model('Player').findOne({
+        _id: req.params.id
+        }, (err, player) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                _.assign(player, req.body);
+                player.save(function(err) {
+                if (err) {
+                    Responses.standardError(res, err);
+                } else {
+                    Responses.standardResponse(res, player);
+                }
+                });
+            }
+        });
     })
     .post(function(req, res) {
-
+        mongoose.model('Player').create(req.body, (err, player) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                Responses.standardResponse(res, player);
+            }
+        });
     })
     .delete(function(req, res) {
-
+        mongoose.model('Player').findOne({
+        _id: req.params.id
+        }, (err, player) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                _.assign(player, req.body);
+                player.remove(function(err) {
+                if (err) {
+                    Responses.standardError(res, err);
+                } else {
+                    Responses.standardResponse(res, player);
+                }
+                });
+            }
+        });
     })
 
 router.route('/:pid/round/:rid')

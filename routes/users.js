@@ -26,13 +26,45 @@ router.route('/:uid')
         });
     })
     .put(function(req, res) {
-        
+        mongoose.model('User').findOne({_id: req.params.username}, (err, user) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                _.assign(user, req.body);
+                user.save(function(err) {
+                if (err) {
+                    Responses.standardError(res, err);
+                } else {
+                    Responses.standardResponse(res, user);
+                }
+                });
+            }
+        });
     })
     .post(function(req, res) {
-
+        mongoose.model('User').create(req.body, (err, user) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                Responses.standardResponse(res, user);
+            }
+        });
     })
     .delete(function(req, res) {
-
+        mongoose.model('User').findOne({_id: req.params.username}, (err, user) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                _.assign(user, req.body);
+                user.remove(function(err) {
+                if (err) {
+                    Responses.standardError(res, err);
+                } else {
+                    Responses.standardResponse(res, user);
+                }
+                });
+            }
+        });
     })
     
 module.exports = router;
