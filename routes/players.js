@@ -1,19 +1,20 @@
-var express = require('express'),
-    router = express.Router(),
-    mongoose = require('mongoose'),
-    bodyParser = require('body-parser'),
-    methodOverride = require('method-override'),
-    _ = require('lodash');
+'use strict';
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
+const Responses = require('./responses');
+const _ = require('lodash');
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(methodOverride(function(req, res) {
-    if(req.body && typeof req.body == 'object' && '_method' in req.body) {
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         var method = req.body._method;
         delete req.body._method;
         return method;
     }
 }));
-
 
 // Already at /players
 router.route('/')
@@ -26,6 +27,15 @@ router.route('/')
             }
         });
     })
+    .post(function(req, res) {
+        mongoose.model('Player').create(req.body, (err, player) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                Responses.standardResponse(res, player);
+            }
+        });
+    });
 
 router.route('/:pid')
     .get(function(req, res) {
@@ -39,62 +49,53 @@ router.route('/:pid')
     })
     .put(function(req, res) {
         mongoose.model('Player').findOne({
-        _id: req.params.id
+            _id: req.params.id
         }, (err, player) => {
             if (err) {
                 Responses.standardError(res, err);
             } else {
                 _.assign(player, req.body);
                 player.save(function(err) {
-                if (err) {
-                    Responses.standardError(res, err);
-                } else {
-                    Responses.standardResponse(res, player);
-                }
+                    if (err) {
+                        Responses.standardError(res, err);
+                    } else {
+                        Responses.standardResponse(res, player);
+                    }
                 });
-            }
-        });
-    })
-    .post(function(req, res) {
-        mongoose.model('Player').create(req.body, (err, player) => {
-            if (err) {
-                Responses.standardError(res, err);
-            } else {
-                Responses.standardResponse(res, player);
             }
         });
     })
     .delete(function(req, res) {
         mongoose.model('Player').findOne({
-        _id: req.params.id
+            _id: req.params.id
         }, (err, player) => {
             if (err) {
                 Responses.standardError(res, err);
             } else {
                 _.assign(player, req.body);
                 player.remove(function(err) {
-                if (err) {
-                    Responses.standardError(res, err);
-                } else {
-                    Responses.standardResponse(res, player);
-                }
+                    if (err) {
+                        Responses.standardError(res, err);
+                    } else {
+                        Responses.standardResponse(res, player);
+                    }
                 });
             }
         });
-    })
+    });
 
 router.route('/:pid/round/:rid')
     .get(function(req, res) {
-        
+
     })
     .put(function(req, res) {
-        
+
     })
     .post(function(req, res) {
 
     })
     .delete(function(req, res) {
 
-    })
-    
+    });
+
 module.exports = router;

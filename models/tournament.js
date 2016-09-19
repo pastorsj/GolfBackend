@@ -9,7 +9,7 @@ var tournamentSchema = new Schema({
         type: Date,
         required: true
     },
-    players: [Schema.Types.Mixed],
+    players: [Schema.Types.Mixed]
 });
 
 mongoose.model('Tournamant', tournamentSchema);

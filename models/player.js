@@ -35,7 +35,7 @@ var playerSchema = new Schema({
         tournament: {
             type: Schema.Types.Mixed,
             required: false
-        },
+        }
     }]
 });
 

@@ -4,7 +4,7 @@ var courseSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    holes: [String],
+    holes: [Number],
     slope: {
         type: Number,
         required: true
@@ -16,7 +16,7 @@ var courseSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true
-    },
+    }
 });
 
 mongoose.model('Course', courseSchema);

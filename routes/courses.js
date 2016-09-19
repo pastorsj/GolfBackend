@@ -1,18 +1,20 @@
-var express = require('express'),
-    router = express.Router(),
-    mongoose = require('mongoose'),
-    bodyParser = require('body-parser'),
-    methodOverride = require('method-override');
+'use strict';
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
+const Responses = require('./responses');
+const _ = require('lodash');
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(methodOverride(function(req, res) {
-    if(req.body && typeof req.body == 'object' && '_method' in req.body) {
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         var method = req.body._method;
         delete req.body._method;
         return method;
     }
 }));
-
 
 // Already at /courses
 router.route('/')
@@ -25,6 +27,15 @@ router.route('/')
             }
         });
     })
+    .post(function(req, res) {
+        mongoose.model('Course').create(req.body, (err, course) => {
+            if (err) {
+                Responses.standardError(res, err);
+            } else {
+                Responses.standardResponse(res, course);
+            }
+        });
+    });
 
 router.route('/:cid')
     .get(function(req, res) {
@@ -38,48 +49,39 @@ router.route('/:cid')
     })
     .put(function(req, res) {
         mongoose.model('Course').findOne({
-        _id: req.params.id
+            _id: req.params.id
         }, (err, course) => {
             if (err) {
                 Responses.standardError(res, err);
             } else {
                 _.assign(course, req.body);
                 course.save(function(err) {
-                if (err) {
-                    Responses.standardError(res, err);
-                } else {
-                    Responses.standardResponse(res, course);
-                }
+                    if (err) {
+                        Responses.standardError(res, err);
+                    } else {
+                        Responses.standardResponse(res, course);
+                    }
                 });
-            }
-        });
-    })
-    .post(function(req, res) {
-        mongoose.model('Course').create(req.body, (err, course) => {
-            if (err) {
-                Responses.standardError(res, err);
-            } else {
-                Responses.standardResponse(res, course);
             }
         });
     })
     .delete(function(req, res) {
         mongoose.model('Course').findOne({
-        _id: req.params.id
+            _id: req.params.id
         }, (err, course) => {
             if (err) {
                 Responses.standardError(res, err);
             } else {
                 _.assign(course, req.body);
                 course.remove(function(err) {
-                if (err) {
-                    Responses.standardError(res, err);
-                } else {
-                    Responses.standardResponse(res, course);
-                }
+                    if (err) {
+                        Responses.standardError(res, err);
+                    } else {
+                        Responses.standardResponse(res, course);
+                    }
                 });
             }
         });
-    })
-    
+    });
+
 module.exports = router;
