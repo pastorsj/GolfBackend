@@ -39,7 +39,7 @@ router.route('/:tid')
         });
     })
     .put(function(req, res) {
-        mongoose.model('Tournament').findOne({_id: req.params.id}, (err, tournament) => {
+        mongoose.model('Tournament').findOne({_id: req.params.tid}, (err, tournament) => {
             if (err) {
                 Responses.standardError(res, err);
             } else {
@@ -64,7 +64,7 @@ router.route('/:tid')
         });
     })
     .delete(function(req, res) {
-        mongoose.model('Tournament').findOne({_id: req.params.id}, (err, tournament) => {
+        mongoose.model('Tournament').findOne({_id: req.params.tid}, (err, tournament) => {
             if (err) {
                 Responses.standardError(res, err);
             } else {

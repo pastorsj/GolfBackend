@@ -49,7 +49,7 @@ router.route('/:pid')
     })
     .put(function(req, res) {
         mongoose.model('Player').findOne({
-            _id: req.params.id
+            _id: req.params.pid
         }, (err, player) => {
             if (err) {
                 Responses.standardError(res, err);
@@ -67,7 +67,7 @@ router.route('/:pid')
     })
     .delete(function(req, res) {
         mongoose.model('Player').findOne({
-            _id: req.params.id
+            _id: req.params.pid
         }, (err, player) => {
             if (err) {
                 Responses.standardError(res, err);

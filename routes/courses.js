@@ -49,7 +49,7 @@ router.route('/:cid')
     })
     .put(function(req, res) {
         mongoose.model('Course').findOne({
-            _id: req.params.id
+            _id: req.params.cid
         }, (err, course) => {
             if (err) {
                 Responses.standardError(res, err);
@@ -67,7 +67,7 @@ router.route('/:cid')
     })
     .delete(function(req, res) {
         mongoose.model('Course').findOne({
-            _id: req.params.id
+            _id: req.params.cid
         }, (err, course) => {
             if (err) {
                 Responses.standardError(res, err);
